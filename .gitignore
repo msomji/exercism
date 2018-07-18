@@ -3,3 +3,10 @@
 .recommenders/
 .vscode/
 RemoteSystemsTempFiles/
+/node_modules
+/build
+/.gradle
+/.class
+/.bin
+/bin
+/.gradle
