@@ -10,3 +10,5 @@ RemoteSystemsTempFiles/
 /.bin
 /bin
 /.gradle
+.exercism
+**/**/.exercism/
