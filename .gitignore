@@ -9,7 +9,9 @@ RemoteSystemsTempFiles/
 /.class
 /.bin
 /bin
-**/bin/
+**/**/bin/
+**/**/obj/
 /.gradle
 .exercism
 **/**/.exercism/
+**/**/.*/

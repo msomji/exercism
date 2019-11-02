@@ -4,15 +4,9 @@ using System.Linq;
 
 public static class Grains
 {
-    public static ulong Square(int n)
-    {
-        
-        new List<int>(n).Aggregate((initial, next )=> ulong.TryParse(initial)+ Grains.Square(next));
-        throw new NotImplementedException("You need to implement this function.");
-    }
+    public static ulong Square(int n) =>
+         n < 1 || n > 64 ? throw new ArgumentOutOfRangeException(): (ulong) Math.Pow(2, n - 1) ;
 
-    public static ulong Total()
-    {
-        throw new NotImplementedException("You need to implement this function.");
-    }
+    public static ulong Total() =>
+            (ulong) Enumerable.Range(1, 64).Select(x => (int) Grains.Square(x)).Sum();
 }
