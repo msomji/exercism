@@ -15,13 +15,29 @@ defmodule SecretHandshake do
   """
   @spec commands(code :: integer) :: list(String.t())
   def commands(code) do
-    Integer.to_string(code, 2)
-      |> String.to_integer
-      |> shake()
+    decode(code)
   end
 
-  def shake(1000), do: ["jump"]
-  def shake(100), do: ["close your eyes"]
-  def shake(10), do: ["double blink"]
-  def shake(1), do: ["wink"]
+  def decode(code, acc \\[], reverse \\ false) do
+    cond do
+      code - 16 >= 0 -> decode(code - 16, acc, true)
+      code - 8 >= 0 -> decode(code - 8, append(["jump"], acc), reverse)
+      code - 4 >= 0 -> decode(code - 4, append(["close your eyes"], acc), reverse)
+      code - 2 >= 0 -> decode(code - 2, append(["double blink"], acc), reverse)
+      code - 1 >= 0 -> decode(code - 1, append(["wink"], acc), reverse)
+      true -> if reverse, do: reverse(acc), else: acc
+    end
+  end
+
+  @spec append(list, list) :: list
+  def append([], a), do: a
+  def append([h | t], b), do: [h | append(t, b)]
+
+
+  @spec reverse(list) :: list
+  def reverse(l), do: reverse(l, [])
+  def reverse([], acc), do: acc
+  def reverse([h | t], acc), do: reverse(t, [h | acc])
+
 end
+

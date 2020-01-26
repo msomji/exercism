@@ -1,5 +1,7 @@
 defmodule RobotSimulator do
   defguard is_valid_position(position) when is_tuple(position) and tuple_size(position) == 2
+  defguard are_integers(x,y) when is_integer(x) and is_integer(y)
+
   @turnLeft %{
     :north => :west,
     :east => :north,
@@ -26,8 +28,8 @@ defmodule RobotSimulator do
   """
   @spec create(direction :: atom, position :: {integer, integer}) :: any
   def create(), do: create(:north, {0,0})
-  def create(direction, position) when direction not in [:north, :south, :east, :west], do: {:error, "invalid direction"}
-  def create(direction, {x,y}) when is_integer(x) and is_integer(y) , do: %{:direction => direction, :position =>{x,y}}
+  def create(direction, _) when direction not in [:north, :south, :east, :west], do: {:error, "invalid direction"}
+  def create(direction, {x,y}) when are_integers(x,y) , do: %{:direction => direction, :position =>{x,y}}
   def create(_, _), do: {:error, "invalid position"}
 
   @doc """
@@ -41,10 +43,12 @@ defmodule RobotSimulator do
   Valid directions are `L`, `A`, `S`
   """
   @spec move(robot:: any, direction:: String):: any
-  def move(robot, "R"), do: create(@turnRight[robot.direction], robot.position)
-  def move(robot, "L"), do: create(@turnLeft[robot.direction], robot.position)
-  def move(robot, "A"), do: create(robot.direction, sum(@step[robot.direction], robot.position))
+  def move(robot, "R"), do: %{robot | :direction => @turnRight[robot.direction]}
+  def move(robot, "L"), do: %{robot | :direction => @turnLeft[robot.direction]}
+  def move(robot, "A"), do: %{robot | :position => sum(@step[robot.direction], robot.position)}
   def move(_, _), do: {:error, "invalid instruction"}
+
+
 
   @doc """
   Simulate the robot's movement given a string of instructions.
@@ -68,15 +72,11 @@ defmodule RobotSimulator do
   Valid directions are: `:north`, `:east`, `:south`, `:west`
   """
   @spec direction(robot :: any) :: atom
-  def direction(robot) do
-    robot[:direction]
-  end
+  def direction(%{:direction => dir}), do: dir
 
   @doc """
   Return the robot's position.
   """
   @spec position(robot :: any) :: {integer, integer}
-  def position(robot) do
-    robot[:position]
-  end
+  def position(%{:position => pos}), do: pos
 end
